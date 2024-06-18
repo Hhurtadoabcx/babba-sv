@@ -1,12 +1,11 @@
 const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const bodyParser = require('body-parser');
-const os = require('os');
 
 const app = express();
-const PORT = 3000;
-const SUPABASE_URL = 'https://qbymoxgxlzamxhonbwdd.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFieW1veGd4bHphbXhob25id2RkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTUzODQ4MjcsImV4cCI6MjAzMDk2MDgyN30.BlsOkzyg0m4KnjEqWvA7SkeEMbrKF0bJKJgGU6ghOas';
+const PORT = process.env.PORT || 3000;
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -57,7 +56,6 @@ app.post('/send-sensor-data/heart-rate-spo2', async (req, res) => {
   }
 });
 
-// Definir la ruta raíz
 app.get('/', (req, res) => {
   res.send('¡Bienvenido a la API de Babba!');
 });
@@ -99,23 +97,6 @@ async function storeNotification(message) {
   }
 }
 
-const interfaces = os.networkInterfaces();
-let ipAddress;
-for (const key in interfaces) {
-  for (const interface of interfaces[key]) {
-    if (interface.family === 'IPv4' && !interface.internal) {
-      ipAddress = interface.address;
-      break;
-    }
-  }
-  if (ipAddress) break;
-}
-
-if (!ipAddress) {
-  console.error('No se pudo encontrar una dirección IPv4 válida.');
-  process.exit(1);
-}
-
 app.listen(PORT, () => {
-  console.log(`Server running at http://${ipAddress}:${PORT}`);
+  console.log(`Server running at port ${PORT}`);
 });
