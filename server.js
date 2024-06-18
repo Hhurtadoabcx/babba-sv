@@ -14,14 +14,14 @@ app.use(bodyParser.json());
 
 let accelerometerGyroscopeData;
 let heartRateSpo2Data;
-const ACCELERATION_THRESHOLD = 12.6; // Umbral para detectar un movimiento brusco en m/s²
+const ACCELERATION_THRESHOLD = 12.6;
 
 app.post('/send-sensor-data/accelerometer-gyroscope', async (req, res) => {
   accelerometerGyroscopeData = req.body;
   console.log('Datos de giroscopio y acelerómetro recibidos:', accelerometerGyroscopeData);
 
   try {
-    await sendCombinedDataToSupabase(); // Envía constantemente datos mediante broadcast
+    await sendCombinedDataToSupabase();
   } catch (err) {
     console.error('Error enviando datos a Supabase:', err.message);
     res.sendStatus(500);
@@ -49,12 +49,17 @@ app.post('/send-sensor-data/heart-rate-spo2', async (req, res) => {
   console.log('Datos de ritmo cardíaco y SpO2 recibidos:', heartRateSpo2Data);
 
   try {
-    await sendCombinedDataToSupabase(); // Envía constantemente datos mediante broadcast
+    await sendCombinedDataToSupabase();
     res.sendStatus(200);
   } catch (err) {
     console.error('Error enviando datos a Supabase:', err.message);
     res.sendStatus(500);
   }
+});
+
+// Definir la ruta raíz
+app.get('/', (req, res) => {
+  res.send('¡Bienvenido a la API de Babba!');
 });
 
 async function sendCombinedDataToSupabase() {
